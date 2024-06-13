@@ -1,0 +1,14 @@
+{
+	"required": true,
+	"package": "xyz.ashyboxy.mc.metalwings.mixin",
+	"compatibilityLevel": "JAVA_21",
+	"mixins": [
+		"AnvilMenuMixin",
+		"GrindstoneMenuMixin",
+		"GrindstoneMenuMixin$GrindStoneMenuAccessor",
+		"GrindstoneMenuMixin$ResultSlotMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}

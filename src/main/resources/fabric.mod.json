@@ -1,0 +1,36 @@
+{
+	"schemaVersion": 1,
+	"id": "metalwings",
+	"version": "${version}",
+	"name": "Metal Wings",
+	"description": "Server sided, vanilla compatible armored elytra",
+	"authors": [
+		"AshyBoxy"
+	],
+	"contact": {
+		"homepage": "https://github.com/AshyBoxy/MetalWings",
+		"sources": "https://github.com/AshyBoxy/MetalWings",
+		"issues": "https://github.com/AshyBoxy/MetalWings/issues"
+	},
+	"license": "MIT",
+	"icon": "assets/metalwings/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"xyz.ashyboxy.mc.metalwings.MetalWings"
+		]
+	},
+	"mixins": [
+		"metalwings.mixins.json",
+		{
+			"config": "metalwings.client.mixins.json",
+			"environment": "client"
+		}
+	],
+	"depends": {
+		"fabricloader": ">=0.15.11",
+		"minecraft": ">=1.20.5",
+		"java": ">=21",
+		"fabric-api": "*"
+	}
+}

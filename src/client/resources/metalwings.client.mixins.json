@@ -1,0 +1,11 @@
+{
+    "required": true,
+    "package": "xyz.ashyboxy.mc.metalwings.mixin.client",
+    "compatibilityLevel": "JAVA_21",
+    "client": [
+        "HumanoidArmorLayerMixin"
+    ],
+    "injectors": {
+        "defaultRequire": 1
+    }
+}
