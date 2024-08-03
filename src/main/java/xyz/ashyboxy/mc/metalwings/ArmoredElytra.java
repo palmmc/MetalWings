@@ -60,24 +60,18 @@ public class ArmoredElytra {
     }
 
     public static ItemAttributeModifiers mergeAttributeModifiers(ItemStack... itemStacks) {
-        // this is set up so that default chestplate < default elytra < custom chestplate < custom elytra
-        // determines which attribute is applied (assuming you pass the itemstacks in that order)
+        // vanilla's behaviour is for custom attributes to completely replace the default ones
+        // this allows later item's default attributes to replace earlier's custom ones, but from what i remember
+        // vanilla doesn't do anything like this, so i'm gonna say it's fine
         LinkedHashMap<Attribute, ItemAttributeModifiers.Entry> attributes = new LinkedHashMap<>();
         for (ItemStack itemStack : itemStacks) {
-            if (itemStack.is(ItemTags.CHEST_ARMOR)) {
-                ArmorItem armorItem = (ArmorItem) itemStack.getItem();
-                armorItem.getDefaultAttributeModifiers().modifiers().forEach(a -> attributes.put(a.attribute().value(), a));
-            } else {
-                itemStack.getItem().components().getOrDefault(DataComponents.ATTRIBUTE_MODIFIERS, ItemAttributeModifiers.EMPTY)
-                        .modifiers().forEach(a -> attributes.put(a.attribute().value(), a));
-            }
-        }
-        for (ItemStack itemStack : itemStacks) {
-            ItemAttributeModifiers attributeModifiers =
-                    itemStack.get(DataComponents.ATTRIBUTE_MODIFIERS);
+            ItemAttributeModifiers attributeModifiers = itemStack.get(DataComponents.ATTRIBUTE_MODIFIERS);
             if (attributeModifiers == null) continue;
+            if (attributeModifiers.modifiers().isEmpty())
+                attributeModifiers = itemStack.getItem().getDefaultAttributeModifiers();
             attributeModifiers.modifiers().forEach(a -> attributes.put(a.attribute().value(), a));
         }
+
         return new ItemAttributeModifiers(attributes.values().stream().toList(), true);
     }
 }
