@@ -35,6 +35,7 @@ public abstract class AnvilMenuMixin extends ItemCombinerMenu {
     private void createChestplateElytra(CallbackInfo ci, @Local(ordinal = 1) LocalRef<ItemStack> itemStack2,
                                         @Local(ordinal = 2) ItemStack itemStack3,
                                         @Local(ordinal = 0) LocalIntRef cost) {
-        itemStack2.set(ArmoredElytra.createChestplateElytra(itemStack2.get(), itemStack3, cost, this.access));
+        this.access.execute((l, b) -> itemStack2.set(ArmoredElytra.createChestplateElytra(itemStack2.get(),
+                itemStack3, cost, l.getServer())));
     }
 }

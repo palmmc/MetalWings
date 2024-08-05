@@ -1,13 +1,9 @@
 package xyz.ashyboxy.mc.metalwings.mixin;
 
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.tags.ItemTags;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.component.BundleContents;
 import net.minecraft.world.level.block.LevelEvent;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
@@ -17,6 +13,9 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import xyz.ashyboxy.mc.metalwings.ArmoredElytraContents;
+
+import java.util.concurrent.atomic.AtomicReference;
 
 @Mixin(GrindstoneMenu.class)
 public abstract class GrindstoneMenuMixin extends AbstractContainerMenu {
@@ -40,18 +39,16 @@ public abstract class GrindstoneMenuMixin extends AbstractContainerMenu {
         ItemStack input1 = this.repairSlots.getItem(0);
         ItemStack input2 = this.repairSlots.getItem(1);
 
+        AtomicReference<ArmoredElytraContents> contents = new AtomicReference<>();
+        access.execute((l, b) -> contents.set(ArmoredElytraContents.tryGetContents(input1, l.registryAccess())));
+        if (contents.get() == null) return;
+
         if (!input2.isEmpty()) {
             this.resultSlots.setItem(0, ItemStack.EMPTY);
             return;
         }
 
-        Iterable<ItemStack> bundleContents = input1.getOrDefault(DataComponents.BUNDLE_CONTENTS, BundleContents.EMPTY).items();
-        bundleContents.forEach(item -> {
-            if (item.is(ItemTags.CHEST_ARMOR)) {
-                this.resultSlots.setItem(0, item);
-                return;
-            }
-        });
+        this.resultSlots.setItem(0, contents.get().chestplate());
     }
 
     @Mixin(GrindstoneMenu.class)
@@ -76,17 +73,15 @@ public abstract class GrindstoneMenuMixin extends AbstractContainerMenu {
 
         @Inject(method = "onTake", at = @At("HEAD"), cancellable = true)
         private void takeSeparatedChestplate(Player player, ItemStack stack, CallbackInfo ci) {
-            Iterable<ItemStack> bundleContents =
-                    ((GrindStoneMenuAccessor) field_16780).getRepairSlots().getItem(0).getOrDefault(DataComponents.BUNDLE_CONTENTS,
-                            BundleContents.EMPTY).items();
-            bundleContents.forEach(item -> {
-                if (item.is(Items.ELYTRA)) {
-                    val$access.execute((level, blockPos) -> {
-                        level.levelEvent(LevelEvent.SOUND_GRINDSTONE_USED, blockPos, 0);
-                        ((GrindStoneMenuAccessor) field_16780).getRepairSlots().setItem(0, item);
-                    });
-                }
+            AtomicReference<ArmoredElytraContents> contents = new AtomicReference<>();
+            val$access.execute((l, b) -> contents.set(ArmoredElytraContents.tryGetContents(((GrindStoneMenuAccessor) field_16780).getRepairSlots().getItem(0), l.registryAccess())));
+            if (contents.get() == null) return;
+
+            val$access.execute((level, blockPos) -> {
+                level.levelEvent(LevelEvent.SOUND_GRINDSTONE_USED, blockPos, 0);
+                ((GrindStoneMenuAccessor) field_16780).getRepairSlots().setItem(0, contents.get().elytra());
             });
+
             ci.cancel();
         }
     }
