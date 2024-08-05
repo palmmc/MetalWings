@@ -69,8 +69,7 @@ public class ArmoredElytra {
         MutableComponent chestplateName = chestplate.getHoverName().copy();
 
         if (chestplate.has(DataComponents.CUSTOM_NAME)) chestplateName.withStyle(ChatFormatting.ITALIC);
-        lore.add(Component.translatableWithFallback(MetalWings.MOD_ID + ".elytra.chestplate", "+ %s",
-                chestplateName).setStyle(Style.EMPTY.withItalic(false).applyFormat(ChatFormatting.GOLD)));
+        lore.add(Component.literal("+ ").append(chestplateName).setStyle(Style.EMPTY.withItalic(false).applyFormat(ChatFormatting.GOLD)));
 
         if (chestplate.has(DataComponents.TRIM))
             chestplate.get(DataComponents.TRIM).addToTooltip(null,
