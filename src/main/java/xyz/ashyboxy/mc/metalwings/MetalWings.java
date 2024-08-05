@@ -2,6 +2,7 @@ package xyz.ashyboxy.mc.metalwings;
 
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import net.minecraft.ResourceLocationException;
 import net.minecraft.resources.ResourceLocation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +17,10 @@ public class MetalWings implements ModInitializer {
 		CommandRegistrationCallback.EVENT.register(MetalWingsCommands::register);
 	}
 
-	public static ResourceLocation id(String path) {
-		return ResourceLocation.fromNamespaceAndPath(MOD_ID, path);
+    public static ResourceLocation id(String path) {
+		// tryBuild is in both 1.20.6 and 1.21, but i don't want it to silently fail
+		ResourceLocation rl = ResourceLocation.tryBuild(MOD_ID, path);
+		if (rl == null) throw new ResourceLocationException("Invalid character in location: " + MOD_ID + ":" + path);
+		return rl;
 	}
 }
