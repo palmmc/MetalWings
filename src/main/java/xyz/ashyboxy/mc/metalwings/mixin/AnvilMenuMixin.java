@@ -24,7 +24,6 @@ public abstract class AnvilMenuMixin extends ItemCombinerMenu {
         super(type, containerId, playerInventory, access);
     }
 
-    // we want to skip vanilla's code if we have a chestplate + elytra
     @ModifyExpressionValue(method = "createResult", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;isEmpty()Z", ordinal = 1))
     private boolean checkChestplateElytra(boolean original, @Local(ordinal = 1) ItemStack itemStack2,
                                           @Local(ordinal = 2) ItemStack itemStack3) {
@@ -35,6 +34,7 @@ public abstract class AnvilMenuMixin extends ItemCombinerMenu {
     private void createChestplateElytra(CallbackInfo ci, @Local(ordinal = 1) LocalRef<ItemStack> itemStack2,
                                         @Local(ordinal = 2) ItemStack itemStack3,
                                         @Local(ordinal = 0) LocalIntRef cost) {
-        itemStack2.set(ArmoredElytra.createChestplateElytra(itemStack2.get(), itemStack3, cost, this.access));
+        this.access.execute((l, b) -> itemStack2.set(ArmoredElytra.createChestplateElytra(itemStack2.get(),
+                itemStack3, cost, l.getServer())));
     }
 }
