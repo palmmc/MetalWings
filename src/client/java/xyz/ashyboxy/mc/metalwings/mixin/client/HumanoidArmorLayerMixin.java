@@ -7,13 +7,14 @@ import net.minecraft.world.item.Items;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
+import xyz.ashyboxy.mc.metalwings.ArmoredElytra;
 import xyz.ashyboxy.mc.metalwings.ArmoredElytraContents;
 
 @Mixin(HumanoidArmorLayer.class)
 public class HumanoidArmorLayerMixin {
     @ModifyVariable(method = "renderArmorPiece", at = @At("STORE"), ordinal = 0)
     private ItemStack replaceElytraWithChestplate(ItemStack itemStack) {
-        if (!itemStack.is(Items.ELYTRA) || Minecraft.getInstance().player == null) return itemStack;
+        if (!ArmoredElytra.isElytra(itemStack) || Minecraft.getInstance().player == null) return itemStack;
         ArmoredElytraContents contents = ArmoredElytraContents.tryGetContents(itemStack,
                 Minecraft.getInstance().player.registryAccess());
         return contents != null ? contents.chestplate() : itemStack;

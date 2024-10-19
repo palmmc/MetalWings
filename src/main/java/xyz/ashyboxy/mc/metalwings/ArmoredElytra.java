@@ -1,6 +1,7 @@
 package xyz.ashyboxy.mc.metalwings;
 
 import com.llamalad7.mixinextras.sugar.ref.LocalIntRef;
+import net.fabricmc.fabric.api.entity.event.v1.FabricElytraItem;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
@@ -13,6 +14,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.item.ElytraItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.BundleContents;
@@ -30,7 +32,7 @@ public class ArmoredElytra {
     public static final ResourceLocation CHESTPLATE_DATA = MetalWings.id("chestplate");
 
     public static ItemStack createChestplateElytra(ItemStack chestplate, ItemStack elytra, LocalIntRef cost, MinecraftServer server) {
-        if (!(chestplate.is(ItemTags.CHEST_ARMOR) && chestplate.getItem() instanceof ArmorItem && elytra.is(Items.ELYTRA)))
+        if (!(chestplate.is(ItemTags.CHEST_ARMOR) && isElytra(elytra)))
             return chestplate;
 
         // switcheroo - chestplate + elytra is the logical order,
@@ -99,5 +101,10 @@ public class ArmoredElytra {
         }
 
         return new ItemAttributeModifiers(attributes.values().stream().toList(), true);
+    }
+
+    public static boolean isElytra(ItemStack item) {
+        // could use a tag too, so people can add elytra which don't implement these (weird)
+        return item.getItem() instanceof ElytraItem || item.getItem() instanceof FabricElytraItem;
     }
 }
