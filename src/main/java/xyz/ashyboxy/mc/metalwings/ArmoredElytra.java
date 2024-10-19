@@ -31,6 +31,7 @@ public class ArmoredElytra {
     public static final ResourceLocation ELYTRA_DATA = MetalWings.id("elytra");
     public static final ResourceLocation CHESTPLATE_DATA = MetalWings.id("chestplate");
 
+    // TODO: codec for custom data storage
     public static ItemStack createChestplateElytra(ItemStack chestplate, ItemStack elytra, LocalIntRef cost, MinecraftServer server) {
         if (!(chestplate.is(ItemTags.CHEST_ARMOR) && isElytra(elytra)))
             return chestplate;
@@ -40,12 +41,20 @@ public class ArmoredElytra {
         ItemStack output = elytra.copy();
         // item component types are server and client synced
         // (it gets angy if the server has component types the client doesn't)
+        // could potentially depend on polymer for this
         switch (WorldConfig.getConfig(server).storageMode) {
             case BUNDLE_CONTENTS: {
                 List<ItemStack> bundleContents = new ArrayList<>();
                 bundleContents.add(chestplate);
                 bundleContents.add(elytra);
                 output.set(DataComponents.BUNDLE_CONTENTS, new BundleContents(bundleContents));
+
+                // allow vanilla tweaks to break our chestplates and prevent it from making double armored elytra
+                CompoundTag customData = output.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
+                CompoundTag armoredTag = new CompoundTag();
+                armoredTag.putBoolean("armored", true);
+                customData.put("armored_elytra", armoredTag);
+                output.set(DataComponents.CUSTOM_DATA, CustomData.of(customData));
                 break;
             }
             case CUSTOM_DATA: {
