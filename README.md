@@ -1,13 +1,13 @@
 # Metal Wings
 Server sided, vanilla compatible armored elytra
 
-Like Vanilla Tweaks' Armored Elytra, available for 1.20.6 and 1.21(.1)
+Like Vanilla Tweaks' Armored Elytra, available for 1.20.6, 1.21(.1), and 1.21.4
 
 ## Usage
 You can combine elytra with a chestplate in an anvil, make sure you put the chestplate in the left slot. You can 
 then separate them by putting them in a grindstone.
 
-The mod works perfectly fine server only, but when on the client it'll render both the elytra and chestplate on 
+The mod works perfectly fine server only, and when on the client it'll render both the elytra and chestplate on 
 players and armor stands.
 
 ## Vanilla Tweaks
