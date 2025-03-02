@@ -5,7 +5,6 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.world.item.ElytraItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.BundleContents;
 import net.minecraft.world.item.component.CustomData;
@@ -46,7 +45,7 @@ public record ArmoredElytraContents(ItemStack chestplate, ItemStack elytra) {
         ItemStack elytra = null;
 
         for (ItemStack itemStack : bundleContents.items()) {
-            if (itemStack.getItem() instanceof ElytraItem) elytra = itemStack.copy();
+            if (ArmoredElytra.isElytra(itemStack)) elytra = itemStack.copy();
             else if (itemStack.is(ItemTags.CHEST_ARMOR)) chestplate = itemStack.copy();
         }
 

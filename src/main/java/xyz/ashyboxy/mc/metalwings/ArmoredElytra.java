@@ -1,7 +1,6 @@
 package xyz.ashyboxy.mc.metalwings;
 
 import com.llamalad7.mixinextras.sugar.ref.LocalIntRef;
-import net.fabricmc.fabric.api.entity.event.v1.FabricElytraItem;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
@@ -13,10 +12,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraft.world.item.ArmorItem;
-import net.minecraft.world.item.ElytraItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.BundleContents;
 import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
@@ -105,7 +101,7 @@ public class ArmoredElytra {
             ItemAttributeModifiers attributeModifiers = itemStack.get(DataComponents.ATTRIBUTE_MODIFIERS);
             if (attributeModifiers == null) continue;
             if (attributeModifiers.modifiers().isEmpty())
-                attributeModifiers = itemStack.getItem().getDefaultAttributeModifiers();
+                attributeModifiers = itemStack.getItem().components().getOrDefault(DataComponents.ATTRIBUTE_MODIFIERS, ItemAttributeModifiers.EMPTY);
             attributeModifiers.modifiers().forEach(a -> attributes.put(a.attribute().value(), a));
         }
 
@@ -113,7 +109,6 @@ public class ArmoredElytra {
     }
 
     public static boolean isElytra(ItemStack item) {
-        // could use a tag too, so people can add elytra which don't implement these (weird)
-        return item.getItem() instanceof ElytraItem || item.getItem() instanceof FabricElytraItem;
+        return item.has(DataComponents.GLIDER);
     }
 }

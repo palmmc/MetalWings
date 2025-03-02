@@ -6,12 +6,9 @@ import com.llamalad7.mixinextras.sugar.ref.LocalIntRef;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.AnvilMenu;
-import net.minecraft.world.inventory.ContainerLevelAccess;
-import net.minecraft.world.inventory.ItemCombinerMenu;
-import net.minecraft.world.inventory.MenuType;
-import net.minecraft.world.item.ElytraItem;
+import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -21,14 +18,14 @@ import xyz.ashyboxy.mc.metalwings.ArmoredElytraContents;
 
 @Mixin(AnvilMenu.class)
 public abstract class AnvilMenuMixin extends ItemCombinerMenu {
-    public AnvilMenuMixin(MenuType<?> type, int containerId, Inventory playerInventory, ContainerLevelAccess access) {
-        super(type, containerId, playerInventory, access);
+    public AnvilMenuMixin(@Nullable MenuType<?> menuType, int i, Inventory inventory, ContainerLevelAccess containerLevelAccess, ItemCombinerMenuSlotDefinition itemCombinerMenuSlotDefinition) {
+        super(menuType, i, inventory, containerLevelAccess, itemCombinerMenuSlotDefinition);
     }
 
     @ModifyExpressionValue(method = "createResult", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;isEmpty()Z", ordinal = 1))
     private boolean checkChestplateElytra(boolean original, @Local(ordinal = 1) ItemStack itemStack2,
                                           @Local(ordinal = 2) ItemStack itemStack3) {
-        if (itemStack2.is(ItemTags.CHEST_ARMOR) && itemStack3.getItem() instanceof ElytraItem)
+        if (itemStack2.is(ItemTags.CHEST_ARMOR) && ArmoredElytra.isElytra(itemStack3))
             return access.evaluate((l, b) -> ArmoredElytraContents.tryGetContents(itemStack3, l.registryAccess()) != null, true);
         return original;
     }

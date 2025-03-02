@@ -1,5 +1,5 @@
 plugins {
-	id 'fabric-loom' version '1.8-SNAPSHOT'
+	id 'fabric-loom' version '1.10-SNAPSHOT'
 	id 'maven-publish'
 }
 
@@ -46,10 +46,9 @@ dependencies {
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
 	// adds to vanilla elytra
-	modRuntimeOnly "maven.modrinth:customizable-elytra:fabric-2.2.7+1.21"
+	modRuntimeOnly "maven.modrinth:customizable-elytra:fabric-2.2.8+1.21.4"
 	// adds chestplates
-	modRuntimeOnly "maven.modrinth:advanced-netherite:fabric-2.1.6-mc1.21.1"
-	// i'm (ashyboxy) currently using a private mod to test entirely custom elytra, sorry
+	modRuntimeOnly "maven.modrinth:advanced-netherite:fabric-2.2.2-mc1.21.4"
 }
 
 processResources {

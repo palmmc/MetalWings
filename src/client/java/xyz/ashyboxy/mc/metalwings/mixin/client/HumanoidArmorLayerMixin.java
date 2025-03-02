@@ -12,7 +12,7 @@ import xyz.ashyboxy.mc.metalwings.ArmoredElytraContents;
 
 @Mixin(HumanoidArmorLayer.class)
 public class HumanoidArmorLayerMixin {
-    @ModifyVariable(method = "renderArmorPiece", at = @At("STORE"), ordinal = 0)
+    @ModifyVariable(method = "renderArmorPiece", at = @At("LOAD"), ordinal = 0, argsOnly = true)
     private ItemStack replaceElytraWithChestplate(ItemStack itemStack) {
         if (!ArmoredElytra.isElytra(itemStack) || Minecraft.getInstance().player == null) return itemStack;
         ArmoredElytraContents contents = ArmoredElytraContents.tryGetContents(itemStack,
